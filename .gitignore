@@ -1,6 +1,10 @@
 # CMake artifacts
 cmake-build-debug
 
+# CLion artifacts
+.idea
+
+
 # Prerequisites
 *.d
 
