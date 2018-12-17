@@ -34,7 +34,15 @@
 struct rfc_header;
 typedef struct rfc_header* ob_ref;
 
+
+/* Each node type needs a destructor.  It should clear pointer
+ * fields (link to NULL if reference counted, free if not
+ * it is not reference counted and this is the unique owner).
+ * Do NOT free storage in the destructor -- that will be
+ * done after the destructor returns.
+ */
 typedef void (*destructor) (void *);
+
 
 /*
  * rfc_descriptor is the common part before class-specific
@@ -66,6 +74,7 @@ void no_cleanup_necessary(struct rfc_header* obj);
 struct rfc_header {
     int refcount;
     int magic; // Dynamic type tag to avoid booboos
+    int obj_num; // Debugging aid --- each object gets a unique number
     struct rfc_descriptor* desc;
 };
 
@@ -76,5 +85,8 @@ struct rfc_header {
  */
 // void link(ob_ref *from, ob_ref to);
 void link(void *from, void *to); // So that we don't have to cast in user code
+
+/* Print stats */
+void rfc_stats();
 
 #endif //AST_REFCOUNT_H
