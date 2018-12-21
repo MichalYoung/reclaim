@@ -15,6 +15,12 @@ add_executable(BINTREE
         refcount.c refcount.h
         )
 
+# Example for working out details of arena API
+add_executable(ARENA_LIST
+        arena_list.c
+        arena.c arena.h)
+
+
 # The include-directories command is discouraged in
 # modern CMake.  I need to learn how to set this up
 # as a specific dependency for a target.
