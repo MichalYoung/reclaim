@@ -65,9 +65,8 @@ void dump_tree(ref_node root) {
     }
 }
 
-
-int main(int argc, char** argv) {
-
+void test_refcount() {
+    printf("Refcount test\n");
     printf("Constructing leaf\n");
     // ref_node a_leaf = construct_leaf(5);   // NOT PERMITTED!
     ref_node a_leaf; link(&a_leaf, construct_leaf(5));
@@ -108,6 +107,12 @@ int main(int argc, char** argv) {
     link(&twins, NULL);
     printf("All clear, storage should be free.\n");
     rfc_stats();
+
+}
+
+
+int main(int argc, char** argv) {
+
     return 0;
 }
 

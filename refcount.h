@@ -14,6 +14,8 @@
 #ifndef AST_REFCOUNT_H
 #define AST_REFCOUNT_H
 
+#define RFC_TRACK 1
+
 #include <stdlib.h>
 
 
@@ -60,7 +62,12 @@ struct rfc_descriptor {
 /* One constructor initializes any object, setting correct
  * size.  Type-specific constructors can call it and then
  * fill in the variable part.
+ * CHANGE:  We want to call the allocator first, and then
+ * the type-specific constructor.  This is mainly so that
+ * we can capture __LINE__ where the client code calls
+ * the constructor, not just in the constructor itself.
  */
+
 ob_ref construct(struct rfc_descriptor* desc);
 
 /*
@@ -74,7 +81,10 @@ void no_cleanup_necessary(struct rfc_header* obj);
 struct rfc_header {
     int refcount;
     int magic; // Dynamic type tag to avoid booboos
-    int obj_num; // Debugging aid --- each object gets a unique number
+#if RFC_TRACK
+    int obj_num;  // Debugging aid --- each object gets a unique number
+    int line_num; // Debugging aid --- where was this allocated?
+#endif
     struct rfc_descriptor* desc;
 };
 
@@ -84,6 +94,7 @@ struct rfc_header {
  * link and manages reference counts.
  */
 // void link(ob_ref *from, ob_ref to);
+
 void link(void *from, void *to); // So that we don't have to cast in user code
 
 /* Print stats */
